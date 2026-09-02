@@ -66,7 +66,7 @@ test('retired Gemini and Custom command configurations reset to unconfigured Cla
   });
   cfg.reset();
   const current = cfg.load();
-  assert.deepEqual(Object.keys(cfg.PROVIDERS).sort(), ['claude', 'codex', 'fixture']);
+  assert.deepEqual(Object.keys(cfg.PROVIDERS).sort(), ['claude', 'codex', 'fixture', 'kimi']);
   assert.equal(current.provider, 'claude');
   assert.equal(current.auth, null);
   assert.equal(Object.hasOwn(current, 'customCommand'), false);
@@ -155,3 +155,25 @@ test('weekly does not fire twice on the same day', () => {
   });
   assert.equal(cadence.isDue(coach, S, { date: '2026-07-26', hhmm: '18:00', weekday: 0 }), false);
 });
+
+/* ---------------- kimi: the generic API-key path ---------------- */
+
+test('kimi is an API-key provider whose key reaches the job environment and nothing else', () => {
+  cfg.save({ enabled: true, provider: 'kimi', auth: null, model: null });
+  assert.equal(cfg.isEnabled(), true);
+  assert.equal(cfg.isConnected(), false, 'enabled but no key yet');
+  assert.equal(auth.authStatus().state, 'disconnected');
+
+  auth.setApiKey('sk-test-kimi');
+  assert.equal(cfg.isConnected(), true);
+  assert.deepEqual([auth.authStatus().state, auth.authStatus().type], ['connected', 'apikey']);
+  assert.deepEqual(cfg.publicConfig(), { enabled: true, provider: 'kimi', providerLabel: 'Kimi' });
+
+  const env = cfg.jobEnv('/tmp');
+  assert.equal(env.MOONSHOT_API_KEY, 'sk-test-kimi');
+  assert.equal(env.ANTHROPIC_API_KEY, undefined);
+  assert.equal(env.CLAUDE_CODE_OAUTH_TOKEN, undefined);
+  assert.equal(env.CODEX_HOME, undefined, 'no Codex cache for an in-process provider');
+  assert.equal(fs.readFileSync(`${DIR}/coach.json`, 'utf8').includes('sk-test-kimi'), false, 'never stored in clear');
+});
+
