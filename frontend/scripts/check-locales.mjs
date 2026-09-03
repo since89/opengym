@@ -37,10 +37,13 @@ const seen = new Map()
 for (const keys of locales.values()) for (const k of keys) seen.set(k, (seen.get(k) || 0) + 1)
 const union = [...seen.keys()]
 
+// Orphan detection needs something to be orphaned from: with a single locale every key
+// is trivially "only here", so skip that check below two locales and keep just the
+// missing-key check (moot too, since the lone locale IS the union, but harmless).
 let failed = false
 for (const [lang, keys] of locales) {
   const missing = union.filter(k => !keys.has(k))
-  const orphans = union.filter(k => keys.has(k) && seen.get(k) === 1)
+  const orphans = locales.size < 2 ? [] : union.filter(k => keys.has(k) && seen.get(k) === 1)
   if (missing.length || orphans.length) {
     failed = true
     console.error(`\n${lang}.js: ${keys.size}/${union.length} keys`)
