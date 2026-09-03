@@ -168,8 +168,9 @@ and a pinned OpenAI Codex CLI. Neither requires an API key: Claude uses an owner
 token, while Codex uses ChatGPT's device-code sign-in and stores its refreshable CLI cache only
 in the private `./data/codex` volume. The third choice, **Kimi (Moonshot)**, is a plain API call:
 paste an API key from platform.kimi.ai — the account must be topped up first, see
-[Kimi-setup-instructions.md](../Kimi-setup-instructions.md). Use the Codex option only on a trusted, owner-controlled
-server; that cache is equivalent to a password and must not be exposed to users or public code.
+[Kimi-setup-instructions.md](../Kimi-setup-instructions.md). Use the Codex option only on a
+trusted, owner-controlled server; that cache is equivalent to a password and must not be
+exposed to users or public code.
 
 ### Turning it on
 

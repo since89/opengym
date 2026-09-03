@@ -51,10 +51,11 @@ own server, under your own provider account, and it is off until an admin turns 
 **For whoever runs the instance.** Both CLI runtimes — Claude's Agent SDK and a pinned
 OpenAI Codex CLI — ship inside the api image, so there is nothing to install; the third
 provider, Kimi, takes an API key pasted in the admin card. Enable the Coach, sign in (a
-`claude setup-token` you paste, Codex's ChatGPT device-code flow, or a Kimi API key) and set spending caps entirely from the admin dashboard — no `.env`
-editing, no restart. The card shows runtime version, sign-in state, jobs run today and the last
-failure; it never shows anybody's intake answers, payloads or proposals. A **Fixture** provider
-walks the entire loop with no AI account at all.
+`claude setup-token` you paste, Codex's ChatGPT device-code flow, or a Kimi API key) and
+set spending caps entirely from the admin dashboard — no `.env` editing, no restart. The
+card shows runtime version, sign-in state, jobs run today and the last failure; it never
+shows anybody's intake answers, payloads or proposals. A **Fixture** provider walks the
+entire loop with no AI account at all.
 
 **For everyone else.** An instance with the Coach switched off is the app it was before, to the
 byte: no new UI, no new requests, no change to the state you sync. Turning it on adds one
