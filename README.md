@@ -188,7 +188,6 @@ Rough, community-driven — ideas and PRs welcome:
 - [x] Effort per set — RIR or RPE, whichever scale you think in
 - [ ] Body measurements (waist, arms…) alongside weight
 - [ ] Per-exercise notes & plate calculator
-- [ ] Exercise instructions in German & Portuguese (UI is translated; upstream dataset doesn't ship these yet)
 
 ## Tech
 
