@@ -7,7 +7,9 @@
 //   node scripts/check-locales.mjs
 //
 // The reference is the union of all locales, not one blessed file: a key added to a
-// single locale then flags the other ten instead of passing unnoticed.
+// single locale then flags every other one instead of passing unnoticed. Only French is
+// left today, so that comparison has nothing to compare against and the orphan check
+// below stands down — see the guard on locales.size.
 
 import { readdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
