@@ -30,9 +30,9 @@ Please don't put a working exploit in a public issue if it can be used against o
 instances. Everything else (a crash you can only trigger on your own box, a scanner warning)
 is fine as a normal issue.
 
-Useful in a report: the version or commit, whether you're running the prebuilt images or a
-source build, your `RP_ID`/`ORIGIN` and what sits in front of the app, steps to reproduce, and
-what an attacker gets out of it.
+Useful in a report: the version or commit you are running (this fork builds from source), your
+`RP_ID`/`ORIGIN` and what sits in front of the app, steps to reproduce, and what an attacker gets
+out of it.
 
 **On response times:** this fork is maintained by one person for a handful of instances. There is
 no SLA and no bounty. Expect days rather than hours. If a report goes unfixed and you want to

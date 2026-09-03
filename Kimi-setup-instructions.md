@@ -59,6 +59,9 @@ between profiles, or top up to Tier 1.
 
 ## 6. Reading the admin card's "Last failure"
 
+The card renders `{class} — {detail}`, so labels below appear prefixed by their error class —
+for example `auth — Kimi API 401 unauthorized (...)` or `provider — Kimi API 429 rate limited`.
+
 | Label | Meaning | Do |
 | --- | --- | --- |
 | `Kimi API 401 unauthorized …` / `403 …` | wrong or revoked key | paste a new key |
@@ -67,7 +70,8 @@ between profiles, or top up to Tier 1.
 | `Kimi API 429 rate limited` | tier limit hit | retry, stagger, or top up |
 | `Kimi API 429 overloaded, retry later` | Kimi side | retry later |
 | `Kimi: output truncated (length limit reached) …` | reasoning + answer exceeded 32 768 tokens | use `:low`, or shorten the plan |
-| `Kimi API 5xx …`, `network error`, `timed out` | transport / Kimi side | retry |
+| `Kimi API 5xx …`, `network error` | transport / Kimi side | retry |
+| `timeout` (no detail) | the request exceeded the 5-minute job limit | retry |
 
 ## 7. Rotating or revoking the key
 
