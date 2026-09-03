@@ -52,6 +52,12 @@ jobs:
         working-directory: frontend
       - run: node scripts/check-locales.mjs
         working-directory: frontend
+      # check-locales.mjs only compares locales against each other; it can't catch a key
+      # that's missing from all of them, which is how a Coach subtitle stayed in English
+      # through a whole translation pass. This walks src/ for every string actually handed
+      # to t() and checks it against fr.js.
+      - run: node scripts/check-fr-coverage.mjs
+        working-directory: frontend
 
   api:
     runs-on: ubuntu-latest
