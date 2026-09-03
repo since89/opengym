@@ -8,7 +8,8 @@ import { t } from '../lib/i18n.js'
 /* The operator's side of the Coach: is it on, can it reach a model, and what has it been
    doing. Translated like the rest of the admin dashboard (see src/locales/), rel() included —
    it spells out English words ("never", "just now", "ago"), unlike the digits-plus-unit
-   fmtDate/fmtDur formatters elsewhere that stay untranslated.
+   fmtDate/fmtDur formatters elsewhere that stay untranslated. So are the job kinds and
+   outcomes the API hands us as English words, via jobKind/jobOutcome below.
  *
  * What it never shows: anybody's intake answers, payloads or proposals. An admin can enable
  * the feature and see that jobs ran; they cannot read what their users asked it. */
@@ -147,9 +148,9 @@ export default function AdminCoach() {
       {!!d.recent?.length && <>
         <h4 className="sec">{t('Recent jobs')}</h4>
         {d.recent.slice(0, 8).map((e, i) => <div key={i} className="row between" style={{ padding: '5px 2px', borderBottom: '1px solid var(--sep)' }}>
-          <span className="small">{e.kind}{e.trigger === 'scheduled' ? ' · ' + t('scheduled') : ''}</span>
+          <span className="small">{jobKind(e.kind)}{e.trigger === 'scheduled' ? ' · ' + t('scheduled') : ''}</span>
           <span className="dim" style={{ fontSize: '.72rem' }}>
-            <span style={{ color: e.outcome === 'failed' ? 'var(--red)' : e.outcome === 'ready' ? 'var(--acc)' : undefined }}>{e.outcome}</span>
+            <span style={{ color: e.outcome === 'failed' ? 'var(--red)' : e.outcome === 'ready' ? 'var(--acc)' : undefined }}>{jobOutcome(e.outcome)}</span>
             {e.ms ? ' · ' + Math.round(e.ms / 1000) + 's' : ''} · {rel(e.at)}
           </span>
         </div>)}
@@ -157,6 +158,15 @@ export default function AdminCoach() {
     </>}
   </div>
 }
+
+/* "Recent jobs" prints two server-side enums as prose. Both are closed sets the API can only
+   draw from (api/coach/jobs.js: kind 'create' | 'review', outcome 'ready' | 'failed' |
+   'nochange'), so they translate through the same table pattern as the two labels below.
+   An unrecognised value falls through untranslated rather than behind a dash — an operator
+   reading a job log needs the raw word more than a tidy placeholder. Only the text is
+   translated: the colour test above still compares the untranslated outcome. */
+const jobKind = k => t({ create: 'create', review: 'review' }[k] || k || '')
+const jobOutcome = o => t({ ready: 'ready', failed: 'failed', nochange: 'nochange' }[o] || o || '')
 
 const authLabel = a => t({
   connected: 'connected', 'not-required': 'n/a', disconnected: 'needed', expired: 'expired', unreadable: 'unreadable', 'replace-required': 'replace'

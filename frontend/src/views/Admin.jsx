@@ -12,10 +12,14 @@ import AdminCoach from './AdminCoach.jsx'
 import { t } from '../lib/i18n.js'
 
 // Admin-only operator dashboard (owner passkey + admin flag; guarded again server-side).
-// Translated like the rest of the app (see src/locales/) — dur() below is the one exception,
-// treated like the fmtDate/fmtDur formatters in lib/format.js (digits + a single-letter unit,
-// no English words). rel() looked the same at a glance but actually spells out English words
-// ("never", "just now", "ago"), so it goes through t() like everything else.
+// Translated like the rest of the app (see src/locales/), aria-labels included: a screen
+// reader on a French dashboard should not announce "revoke". Older views do still carry
+// English ones ("Decrease", "Move up", "Previous week") — their gap to close, not a licence
+// to leave two more here.
+// dur() below is the one exception, treated like the fmtDate/fmtDur formatters in
+// lib/format.js (digits + a single-letter unit, no English words). rel() looked the same at
+// a glance but actually spells out English words ("never", "just now", "ago"), so it goes
+// through t() like everything else.
 
 const rel = ts => {
   if (!ts) return t('never')
@@ -83,7 +87,7 @@ function InvitesCard({ invites, reload }) {
     {open.map(i => <div key={i.code} className="row between" style={{ padding: '7px 2px', borderBottom: '1px solid var(--sep)' }}>
       <span style={{ fontFamily: 'ui-monospace,SFMono-Regular,Menlo,monospace', fontWeight: 500, letterSpacing: '.06em' }}
         onClick={() => { navigator.clipboard?.writeText(i.code).catch(() => {}); toast(t('Copied {0}', i.code)) }}>{i.code}</span>
-      <button className="iconbtn" style={{ width: 32, height: 30, borderRadius: 8, fontSize: 15, color: 'var(--red)' }} onClick={() => revoke(i.code)} aria-label="revoke"><Icon name="trash" /></button>
+      <button className="iconbtn" style={{ width: 32, height: 30, borderRadius: 8, fontSize: 15, color: 'var(--red)' }} onClick={() => revoke(i.code)} aria-label={t('revoke')}><Icon name="trash" /></button>
     </div>)}
     {used.map(i => <div key={i.code} className="row between dim" style={{ padding: '7px 2px', fontSize: '.8rem' }}>
       <span style={{ fontFamily: 'monospace' }}>{i.code}</span><span>→ {i.usedByName || t('used')}</span>
@@ -117,7 +121,7 @@ export default function Admin() {
       <button className="iconbtn" onClick={() => nav('/settings')} aria-label={t('Back')}><Icon name="chevronLeft" /></button>
       <div style={{ flex: 1, marginLeft: 8 }}><h1 style={{ margin: 0 }}>{t('Admin')}</h1>
         <div className="sub">{users ? t('{0} users', users.length) + ' · ' + t('{0} active this week', activeCount) : t('Loading…')}</div></div>
-      <button className="iconbtn" onClick={() => { loadUsers(); loadInvites() }} aria-label="refresh">↻</button>
+      <button className="iconbtn" onClick={() => { loadUsers(); loadInvites() }} aria-label={t('refresh')}>↻</button>
     </div>
 
     <div className="tiles" style={{ marginBottom: 12 }}>
