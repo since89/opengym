@@ -68,11 +68,25 @@ function walk(dir, out = []) {
 
 // Constant tables whose values are handed to t() one hop away, by variable — see header.
 // Extending this list is the documented, expected way to teach the script about a new one.
+//
+// By default every string nested anywhere inside the table is collected (see stringsOfTable
+// below) — right for a flat array (MONTHS), an object of strings (MUSCLE_NAME) or an object/
+// array of [a, b, …] tuples where every element ends up in t() (CATEGORY_TEXT's [title, sub];
+// GOALS' own [code, label] — CoachIntake.jsx passes *both* to t(): the label via
+// `GOALS.map(([v, label]) => … t(label) …)`, the code via `t(p.goal)` in Coach.jsx's
+// summarise()). When a table mixes translatable strings with values that never reach t() —
+// EXPERIENCE's code half is only ever compared (`p.experience === v`), never translated;
+// GLYPH_GROUPS is a list of {key, items} where only `key` goes through `t(g.key)`, `items`
+// are icon names — give that entry a `pick(value)` returning just the strings that matter,
+// instead of collecting everything the shape contains.
 const KNOWN_TABLES = [
   { file: 'lib/format.js', exports: ['MONTHS', 'MONTHS_LONG', 'DAYS', 'DAYN'] },
   { file: 'lib/muscles.js', exports: ['MUSCLE_NAME'] },
   { file: 'lib/progression.js', exports: ['POLICY_NAME', 'POLICY_DESC'] },
   { file: 'views/Coach.jsx', exports: ['CATEGORY_TEXT'] },
+  { file: 'views/CoachIntake.jsx', exports: ['GOALS'] },
+  { file: 'views/CoachIntake.jsx', exports: ['EXPERIENCE'], pick: value => value.map(([, label]) => label) },
+  { file: 'lib/glyphs.js', exports: ['GLYPH_GROUPS'], pick: value => value.map(group => group.key) },
 ]
 
 // Evaluate a matched slice of source as a JS literal — reusing the engine's own quote/escape
@@ -99,10 +113,15 @@ function scanBalanced(src, open) {
   return src.length
 }
 
-// All strings a KNOWN_TABLES entry actually contributes to t(): each entry's own value if
-// it's a string (MUSCLE_NAME, POLICY_NAME…), or every element if it's itself an array
-// (CATEGORY_TEXT's [title, subtitle] pairs; also lets a plain array table like MONTHS pass
-// through unchanged, since Object.values/array-spread already hand us its members directly).
+// Default extraction for a KNOWN_TABLES entry with no `pick`: every string reachable from the
+// value — the value itself if it's a string (MUSCLE_NAME, POLICY_NAME…), or every element if
+// it's itself an array (CATEGORY_TEXT's [title, subtitle] pairs, GOALS' [code, label] pairs —
+// both halves are collected, and both really are handed to t(), see the KNOWN_TABLES comment
+// above; also lets a plain array table like MONTHS pass through unchanged, since
+// Object.values/array-spread already hand us its members directly). Only right when *every*
+// string nested in the shape is actually translatable — an entry where that is not true (a
+// code that is only ever compared, an icon name sitting next to the label that matters) needs
+// its own `pick` instead of this default; see tableStrings.
 const stringsOfTable = value => {
   const entries = Array.isArray(value) ? value : Object.values(value)
   return entries.flatMap(v => (Array.isArray(v) ? v : [v]))
@@ -110,7 +129,7 @@ const stringsOfTable = value => {
 
 function tableStrings() {
   const strings = new Set()
-  for (const { file, exports } of KNOWN_TABLES) {
+  for (const { file, exports, pick } of KNOWN_TABLES) {
     const path = join(srcDir, file)
     const src = readFileSync(path, 'utf8')
     for (const name of exports) {
@@ -127,7 +146,7 @@ function tableStrings() {
       }
       const end = scanBalanced(src, open)
       const value = evalLiteral(src.slice(open, end))
-      for (const s of stringsOfTable(value)) strings.add(s)
+      for (const s of (pick ? pick(value) : stringsOfTable(value))) strings.add(s)
     }
   }
   return strings
