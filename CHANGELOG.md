@@ -42,10 +42,16 @@ own server, under your own provider account, and it is off until an admin turns 
 - ⭐ **How did that feel?** An optional one-tap rating on the finish summary — too easy / about
   right / brutal, plus a note. The Coach reads both.
 
-**For whoever runs the instance.** Both provider runtimes — Claude's Agent SDK and a pinned
-OpenAI Codex CLI — ship inside the api image, so there is nothing to install and neither path
-needs an API key. Enable the Coach, sign in (a `claude setup-token` you paste, or Codex's
-ChatGPT device-code flow) and set spending caps entirely from the admin dashboard — no `.env`
+- 🌙 **Kimi (Moonshot) as a third provider.** An in-process HTTPS adapter for Kimi's
+  OpenAI-compatible API: paste an API key in the admin card, pick `kimi-k3` (default, effort
+  `low`; `kimi-k3:high`/`:max` for more) and every Coach job is one JSON-mode chat completion.
+  Failures are labelled so that a drained balance or a rate limit never reads as a sign-in
+  problem. See [Kimi-setup-instructions.md](Kimi-setup-instructions.md).
+
+**For whoever runs the instance.** Both CLI runtimes — Claude's Agent SDK and a pinned
+OpenAI Codex CLI — ship inside the api image, so there is nothing to install; the third
+provider, Kimi, takes an API key pasted in the admin card. Enable the Coach, sign in (a
+`claude setup-token` you paste, Codex's ChatGPT device-code flow, or a Kimi API key) and set spending caps entirely from the admin dashboard — no `.env`
 editing, no restart. The card shows runtime version, sign-in state, jobs run today and the last
 failure; it never shows anybody's intake answers, payloads or proposals. A **Fixture** provider
 walks the entire loop with no AI account at all.

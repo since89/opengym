@@ -54,11 +54,13 @@ provider dies, the engine carries on offline without skipping a beat.
 | --- | --- | --- | --- |
 | **Claude Code** | Claude Agent SDK | `claude setup-token` on a trusted machine, pasted into the admin card | [Claude setup guide](../Claude-setup-instructions.md) |
 | **OpenAI Codex** | Codex CLI (pinned, bundled) | ChatGPT device-code sign-in from the admin card | [ChatGPT / Codex setup guide](../ChatGPT-setup-instructions.md) |
+| **Kimi** | Kimi API (Moonshot), one in-process HTTPS call | an API key from platform.kimi.ai, pasted into the admin card | [Kimi setup guide](../Kimi-setup-instructions.md) |
 | **Fixture** | in-repo fake | nothing — no AI account at all | walks the whole loop for demos and CI |
 
-Both runtimes are built into the `api` image, so a self-hoster installs nothing. Neither path
-needs an API key. openGym never handles a browser OAuth callback and never asks your users for
-credentials.
+Both CLI runtimes are built into the `api` image, so a self-hoster installs nothing, and neither
+of them needs an API key. Kimi is the exception: a plain HTTPS call to `api.moonshot.ai`, driven
+by an API key you paste once in the admin card (encrypted at rest, sent only in the request
+header). openGym never handles a browser OAuth callback and never asks your users for credentials.
 
 > **Note.** The design deck describes a provider-agnostic surface including Gemini and an
 > owner-supplied custom command. Those adapters were built and then retired before release; a

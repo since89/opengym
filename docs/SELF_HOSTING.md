@@ -166,7 +166,9 @@ The account is yours: every plan or review is one session on the provider accoun
 so budget for it and use the caps below. The built-in choices are Claude's official Agent SDK
 and a pinned OpenAI Codex CLI. Neither requires an API key: Claude uses an owner-created setup
 token, while Codex uses ChatGPT's device-code sign-in and stores its refreshable CLI cache only
-in the private `./data/codex` volume. Use the Codex option only on a trusted, owner-controlled
+in the private `./data/codex` volume. The third choice, **Kimi (Moonshot)**, is a plain API call:
+paste an API key from platform.kimi.ai — the account must be topped up first, see
+[Kimi-setup-instructions.md](../Kimi-setup-instructions.md). Use the Codex option only on a trusted, owner-controlled
 server; that cache is equivalent to a password and must not be exposed to users or public code.
 
 ### Turning it on
@@ -180,6 +182,10 @@ server; that cache is equivalent to a password and must not be exposed to users 
      on a trusted browser or iPad. This is Codex's device-code login; openGym never receives a
      ChatGPT password, API key, browser callback, or access token. Its private CLI cache lives
      in `./data/codex` and is refreshed by Codex itself.
+   - **Kimi**: choose **Use an API key** and paste a key created on platform.kimi.ai. It is
+     encrypted at rest and only ever sent as the `Authorization` header of the Coach's own
+     request to `api.moonshot.ai`. Optional: type `kimi-k3:high` in the Model field for deeper
+     reasoning (default `kimi-k3`, effort `low`).
 3. Hit **Test the Coach**. Green means a real round-trip to the selected provider worked.
 
 The card then shows the runtime, credential state, jobs run today and the last failure, if any.
