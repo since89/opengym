@@ -133,6 +133,16 @@ test('404 points at the two real causes: wrong model id, or an account not toppe
   assert.equal(authish(r.stderr), false);
 });
 
+test('an unlisted status falls through to a generic label, and a 401 with an HTML body still reads as auth', async () => {
+  const r1 = await run(402, kimiErr('payment_required'));
+  assert.equal(r1.stderr, 'Kimi API 402 (payment_required)');
+  assert.equal(authish(r1.stderr), false);
+
+  const r2 = await run(401, '<html><body>Unauthorized</body></html>', { statusText: 'Unauthorized' });
+  assert.equal(r2.stderr, 'Kimi API 401 unauthorized (Unauthorized)');
+  assert.equal(authish(r2.stderr), true);
+});
+
 test('400 distinguishes the content filter from a bad request', async () => {
   assert.equal((await run(400, kimiErr('content_filter'))).stderr, 'Kimi API 400 content filtered');
   const r = await run(400, kimiErr('invalid_request_error', 'prompt tokens + max_tokens exceeds the model specification'));
