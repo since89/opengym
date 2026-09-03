@@ -36,6 +36,13 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: frontend/package-lock.json
+      # frontend/src/lib/coach.test.js imports the server's own payload.js and jobs.js to
+      # check both copies of the plan fingerprint against each other, and jobs.js pulls in
+      # the provider adapters — so the api dependencies have to be installed for that file
+      # to load at all. Without them vitest reports one failed test FILE while still
+      # printing "169 passed" tests: a silent hole of 38 assertions.
+      - run: npm ci --no-audit --no-fund
+        working-directory: api
       - run: npm ci
         working-directory: frontend
       - run: npm test
