@@ -32,8 +32,8 @@
 //      way an unlisted locale key is invisible to t() at runtime. When a new such table
 //      appears — a display-name map, a set of category labels, anything whose values are fed
 //      to t() through a variable rather than written inline — add its file and export name(s)
-//      to KNOWN_TABLES. Forgetting to defeats the point of this script exactly as quietly as
-//      the bug it exists to catch.
+//      to KNOWN_TABLES. Forgetting to add it defeats the point of this script exactly as
+//      quietly as the bug it exists to catch.
 //
 // What this script deliberately does NOT do: walk src/lib/exercises-data.js. Its ~1300
 // exercise records carry body parts, target muscles and equipment as free-text data, not
