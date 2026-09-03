@@ -53,8 +53,10 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-      # No dependencies to install: the Coach tests run on node:test and drive the in-repo
-      # fixture provider, so the whole job graph works without an AI account or a network.
+      # The Coach tests run on node:test and drive the in-repo fixture provider (no AI account),
+      # but importing the adapters pulls in the Claude Agent SDK, so dependencies are installed.
+      - run: npm ci --no-audit --no-fund
+        working-directory: api
       - run: npm test
         working-directory: api
       # The API's copy of the exercise catalogue is generated and committed. A dataset change

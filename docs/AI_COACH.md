@@ -1,6 +1,6 @@
 # The AI Coach
 
-The feature this fork adds to [openGym](https://github.com/DuarteSantos8/openGym): an optional AI
+The feature this fork adds to openGym (whose upstream repository was deleted in August 2026): an optional AI
 that **designs** your training plan and **revises it from what you actually log** — running as a
 CLI on your own server, under your own provider account, off until an admin turns it on.
 

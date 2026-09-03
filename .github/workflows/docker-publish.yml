@@ -1,9 +1,8 @@
 name: Publish Docker images
 
+# Manual only in this fork: the korb3n deployment builds from source (docker compose up --build).
+# Run it by hand if you ever want images on ghcr.io/<owner>/opengym-{api,web}.
 on:
-  push:
-    branches: [main]
-    tags: ['v*']
   workflow_dispatch:
 
 permissions:
