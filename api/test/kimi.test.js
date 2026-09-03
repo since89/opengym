@@ -185,6 +185,12 @@ test('contract: every stderr this adapter can produce is classified the way jobs
     (await run(429, kimiErr('rate_limit_reached_error'))).stderr,
     (await run(429, kimiErr('engine_overloaded_error'))).stderr,
     (await run(429, kimiErr('authentication_token_login_credential'))).stderr,   // hostile type: must be scrubbed
+    (await run(429, kimiErr('quota_401_error'))).stderr,                        // hostile type: must be scrubbed
+    (await run(500, kimiErr('quota_401_error'))).stderr,
+    (await run(429, kimiErr('forbidden_403_case'))).stderr,
+    (await run(500, kimiErr('forbidden_403_case'))).stderr,
+    (await run(429, kimiErr('bad api key format'))).stderr,
+    (await run(500, kimiErr('bad api key format'))).stderr,
     (await run(400, kimiErr('content_filter'))).stderr,
     (await run(400, kimiErr('invalid_request_error'))).stderr,
     (await run(500, kimiErr('server_error'))).stderr,

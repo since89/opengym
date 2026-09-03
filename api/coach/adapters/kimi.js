@@ -22,7 +22,7 @@ const SYSTEM_PROMPT = [
   'Answer only the supplied task and return exactly the requested JSON.',
   'You have no tools, filesystem access, external services, or persistent memory.'
 ].join(' ');
-const AUTH_WORDS = /token|auth|login|credential/gi;
+const AUTH_WORDS = /token|auth|login|credential|api key|401|403/gi;
 const scrub = s => String(s || '').replace(AUTH_WORDS, '*').slice(0, 80);
 
 /** `kimi-k3:high` → effort high; bare `kimi-k3` → low; any other model → suffix dropped, no knob
@@ -42,7 +42,7 @@ function describeError(status, statusText, rawBody) {
   let type = null;
   try { type = JSON.parse(rawBody)?.error?.type || null; } catch { /* HTML gateway page, or an empty body */ }
   const t = type || statusText || 'error';
-  if (status === 401 || status === 403) return `Kimi API ${status} unauthorized (${t})`;
+  if (status === 401 || status === 403) return `Kimi API ${status} unauthorized (${String(t).slice(0, 80)})`;
   const quoted = scrub(t);
   if (status === 404) return `Kimi API 404 (${quoted}): model not found or account not topped up (>= $1)`;
   if (status === 429) {
