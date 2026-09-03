@@ -6,19 +6,20 @@ import { Button, Switch, TextField } from '../components/ui.jsx'
 import { t } from '../lib/i18n.js'
 
 /* The operator's side of the Coach: is it on, can it reach a model, and what has it been
-   doing. Translated like the rest of the admin dashboard (see src/locales/) — relative-time
-   strings below are the one exception, treated like the fmtDate/fmtDur formatters elsewhere.
+   doing. Translated like the rest of the admin dashboard (see src/locales/), rel() included —
+   it spells out English words ("never", "just now", "ago"), unlike the digits-plus-unit
+   fmtDate/fmtDur formatters elsewhere that stay untranslated.
  *
  * What it never shows: anybody's intake answers, payloads or proposals. An admin can enable
  * the feature and see that jobs ran; they cannot read what their users asked it. */
 
 const rel = ts => {
-  if (!ts) return 'never'
+  if (!ts) return t('never')
   const s = Math.max(0, (Date.now() - new Date(ts).getTime()) / 1000)
-  if (s < 60) return 'just now'
-  if (s < 3600) return Math.floor(s / 60) + 'm ago'
-  if (s < 86400) return Math.floor(s / 3600) + 'h ago'
-  return Math.floor(s / 86400) + 'd ago'
+  if (s < 60) return t('just now')
+  if (s < 3600) return t('{0}m ago', Math.floor(s / 60))
+  if (s < 86400) return t('{0}h ago', Math.floor(s / 3600))
+  return t('{0}d ago', Math.floor(s / 86400))
 }
 
 export default function AdminCoach() {
@@ -108,7 +109,7 @@ export default function AdminCoach() {
             {t('The old Claude credential is no longer used. Add a Claude Code setup token instead.')}
           </div>}
           {d.auth?.state === 'unreadable' && <div className="small" style={{ color: 'var(--red)', marginBottom: 8 }}>
-            {t("The stored credential can't be decrypted — this usually means ./data was restored without its")} <code>secret</code> {t('file. Connect again.')}
+            {t("The stored credential can't be decrypted — this usually means ./data was restored without its")} <code>secret</code>{t(' file. Connect again.')}
           </div>}
           <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
             {meta.setupToken && <Button size="sm" variant="primary" icon="key" disabled={busy}

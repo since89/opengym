@@ -12,16 +12,18 @@ import AdminCoach from './AdminCoach.jsx'
 import { t } from '../lib/i18n.js'
 
 // Admin-only operator dashboard (owner passkey + admin flag; guarded again server-side).
-// Translated like the rest of the app (see src/locales/) — relative-time helpers below are
-// the one exception, treated like the fmtDate/fmtDur formatters in lib/format.js.
+// Translated like the rest of the app (see src/locales/) — dur() below is the one exception,
+// treated like the fmtDate/fmtDur formatters in lib/format.js (digits + a single-letter unit,
+// no English words). rel() looked the same at a glance but actually spells out English words
+// ("never", "just now", "ago"), so it goes through t() like everything else.
 
 const rel = ts => {
-  if (!ts) return 'never'
+  if (!ts) return t('never')
   const s = Math.max(0, (Date.now() - ts) / 1000)
-  if (s < 60) return 'just now'
-  if (s < 3600) return Math.floor(s / 60) + 'm ago'
-  if (s < 86400) return Math.floor(s / 3600) + 'h ago'
-  return Math.floor(s / 86400) + 'd ago'
+  if (s < 60) return t('just now')
+  if (s < 3600) return t('{0}m ago', Math.floor(s / 60))
+  if (s < 86400) return t('{0}h ago', Math.floor(s / 3600))
+  return t('{0}d ago', Math.floor(s / 86400))
 }
 const dur = ms => { const m = Math.max(0, Math.floor(ms / 60000)); return m < 60 ? m + 'm' : Math.floor(m / 60) + 'h' + (m % 60) + 'm' }
 
